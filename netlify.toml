@@ -1,0 +1,19 @@
+# Netlify configuration for Flask app deployment
+
+[build]
+  command = "pip install -r requirements-prod.txt && python app.py"
+  publish = "."
+
+[build.environment]
+  PYTHON_VERSION = "3.11"
+  # Use CPU-only PyTorch to save space
+  PIP_INDEX_URL = "https://download.pytorch.org/whl/cpu"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Note: Flask apps typically need a WSGI server for production
+# Consider using gunicorn or waitress for production deployment
+
