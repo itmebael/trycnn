@@ -1,7 +1,7 @@
 # Netlify configuration for Flask app deployment
 
 [build]
-  command = "pip install -r requirements-prod.txt && python app.py"
+  command = "pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu && pip install -r requirements-prod.txt"
   publish = "."
 
 [build.environment]

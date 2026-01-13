@@ -2,7 +2,7 @@ services:
   - type: web
     name: pechay-detection
     env: python
-    buildCommand: pip install -r requirements-prod.txt && pip install gunicorn
+    buildCommand: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu && pip install -r requirements-prod.txt && pip install gunicorn
     startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION

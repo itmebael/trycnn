@@ -8,9 +8,23 @@ The original `requirements.txt` includes PyTorch with CUDA support, which is **~
 
 ### Option 1: Use CPU-Only PyTorch (Recommended)
 
-Use `requirements-prod.txt` which includes CPU-only PyTorch (~200MB instead of ~3GB):
+Use `requirements-prod.txt` with CPU-only PyTorch (~200MB instead of ~3GB):
 
+**Method 1: Use install script (easiest)**
 ```bash
+# Linux/Mac
+bash install-prod.sh
+
+# Windows
+install-prod.bat
+```
+
+**Method 2: Manual installation**
+```bash
+# First install CPU-only PyTorch
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+# Then install other dependencies
 pip install -r requirements-prod.txt
 ```
 
