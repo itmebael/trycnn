@@ -1,0 +1,89 @@
+╔═══════════════════════════════════════════════════════════╗
+║   QUICK START: Run Flask Server on Android (Termux)      ║
+╚═══════════════════════════════════════════════════════════╝
+
+📱 STEP 1: Install Termux
+─────────────────────────────────────────────────────────────
+  1. Open Google Play Store
+  2. Search: "Termux"
+  3. Install "Termux" (by Fredrik Fornwall)
+  4. Open Termux app
+
+
+🔧 STEP 2: Setup Environment
+─────────────────────────────────────────────────────────────
+  Copy and paste these commands one by one in Termux:
+
+  pkg update && pkg upgrade
+  pkg install python
+  pip install flask werkzeug pillow numpy requests python-dotenv
+
+
+📁 STEP 3: Copy Project Files
+─────────────────────────────────────────────────────────────
+  Option A - Using Storage Access:
+    termux-setup-storage
+    cp -r ~/storage/downloads/trycnn ~/trycnn
+
+  Option B - Using Git:
+    cd ~
+    git clone YOUR_REPO_URL trycnn
+
+  Option C - Manual Copy:
+    1. Connect Android to computer via USB
+    2. Copy trycnn folder to Android Downloads
+    3. In Termux: termux-setup-storage
+    4. Then: cp -r ~/storage/downloads/trycnn ~/trycnn
+
+
+📦 STEP 4: Install Dependencies
+─────────────────────────────────────────────────────────────
+  cd ~/trycnn
+  pip install -r requirements.txt
+
+  (If requirements.txt missing, install manually:
+   pip install flask werkzeug pillow numpy requests python-dotenv supabase)
+
+
+▶️  STEP 5: Run Server
+─────────────────────────────────────────────────────────────
+  cd ~/trycnn
+  python app.py
+
+  You should see: "Running on http://0.0.0.0:5000"
+
+
+🌐 STEP 6: Access the App
+─────────────────────────────────────────────────────────────
+  On Android browser:
+    http://localhost:5000
+
+  From other devices (same WiFi):
+    1. Find Android IP: ifconfig | grep "inet "
+    2. Go to: http://ANDROID_IP:5000
+
+
+⚠️  IMPORTANT NOTES
+─────────────────────────────────────────────────────────────
+  ✓ Keep Termux open - closing stops the server
+  ✓ Disable battery optimization for Termux
+  ✓ Both devices must be on same WiFi network
+
+
+🔧 TROUBLESHOOTING
+─────────────────────────────────────────────────────────────
+  "Command not found": pkg install python
+  "Module not found": pip install MODULE_NAME
+  "Permission denied": chmod +x script.sh
+  Server stops: Use nohup python app.py &
+
+
+╔═══════════════════════════════════════════════════════════╗
+║  Files Created:                                           ║
+║  • termux_setup.sh - Automated setup script              ║
+║  • TERMUX_SETUP_GUIDE.md - Detailed guide                 ║
+║  • ANDROID_QUICK_START.txt - This quick reference       ║
+╚═══════════════════════════════════════════════════════════╝
+
+
+

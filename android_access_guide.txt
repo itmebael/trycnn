@@ -1,0 +1,70 @@
+═══════════════════════════════════════════════════════════
+  HOW TO ACCESS FLASK APP FROM ANDROID PHONE
+═══════════════════════════════════════════════════════════
+
+METHOD 1: Access from Android (Easiest)
+─────────────────────────────────────────
+
+STEP 1: Start Flask Server on Your Computer
+  • Open CMD or PowerShell
+  • Type: cd C:\Users\Admin\trycnn
+  • Type: python app.py
+  • Wait for: "Running on http://0.0.0.0:5000"
+  
+  OR use the batch file:
+  • Double-click: run_server.bat
+
+STEP 2: Find Your Computer's IP Address
+  • In CMD or PowerShell, type: ipconfig
+  • Look for "IPv4 Address" under your WiFi adapter
+  • Example: 192.168.1.100
+  
+  OR use the batch file:
+  • Double-click: find_ip.bat
+
+STEP 3: On Your Android Phone
+  • Make sure phone is on SAME WiFi network as computer
+  • Open Chrome or any browser
+  • Type in address bar: http://192.168.1.100:5000
+  • Replace 192.168.1.100 with YOUR computer's IP
+  • Press Enter
+  • You should see the login page!
+
+STEP 4: Login and Use
+  • Login with your credentials
+  • Use the app normally from your phone!
+
+───────────────────────────────────────────────────────────
+
+TROUBLESHOOTING:
+
+❌ Can't connect?
+  ✓ Check both devices are on same WiFi
+  ✓ Check Windows Firewall (allow port 5000)
+  ✓ Try turning off Windows Firewall temporarily to test
+
+❌ Still not working?
+  ✓ Make sure Flask shows: "Running on http://0.0.0.0:5000"
+  ✓ Check your computer's IP hasn't changed
+  ✓ Try accessing from computer browser: http://localhost:5000
+
+───────────────────────────────────────────────────────────
+
+QUICK COMMANDS:
+
+Find IP Address:
+  Windows CMD/PowerShell: ipconfig
+  Look for: IPv4 Address . . . . . . . . . : 192.168.x.x
+  OR: Double-click find_ip.bat
+
+Start Server:
+  Windows CMD/PowerShell: python app.py
+  OR: Double-click run_server.bat
+
+Allow Firewall (if needed):
+  CMD/PowerShell: netsh advfirewall firewall add rule name="Flask" dir=in action=allow protocol=TCP localport=5000
+
+───────────────────────────────────────────────────────────
+
+
+

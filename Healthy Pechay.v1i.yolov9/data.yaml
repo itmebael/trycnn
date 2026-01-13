@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['Healthy-Pechay']
+
+roboflow:
+  workspace: bael
+  project: healthy-pechay-13hdu-xu9u0
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/bael/healthy-pechay-13hdu-xu9u0/dataset/1

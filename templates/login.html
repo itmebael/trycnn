@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pechay Detection System</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.14);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --text-color: #f0fff4;
+  --eco-green: #22c55e;
+  --eco-dark: #14532d;
+}
+
+/* ===== GLOBAL ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("{{ url_for('static', filename='images/backgroun.JPG') }}");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text-color);
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at top left, #22c55e55, transparent 60%),
+    radial-gradient(circle at bottom right, #16a34a66, transparent 55%),
+    linear-gradient(135deg, rgba(5, 46, 22, 0.7), rgba(6, 78, 59, 0.6), rgba(2, 44, 34, 0.7));
+  z-index: -1;
+}
+
+/* ===== LAYOUT WRAPPER ===== */
+.layout-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 60px;
+  width: 100%;
+  max-width: 1000px;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Logo container on the left */
+.logo-container {
+  order: 1;
+}
+
+/* ===== CONTAINER ===== */
+.glass-container {
+  width: 100%;
+  max-width: 420px;
+  padding: 28px;
+  border-radius: 26px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(26px) saturate(180%);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.45);
+}
+
+/* ===== LOGO ===== */
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.disease-list {
+  margin-top: 30px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  width: 100%;
+  max-width: 300px;
+}
+
+.disease-list h3 {
+  margin: 0 0 15px;
+  font-size: 1.1rem;
+  color: var(--eco-green);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.disease-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  justify-content: left;
+  padding-left: 20px;
+}
+
+.disease-item i {
+  color: var(--eco-green);
+  width: 20px;
+}
+
+.logo-container img {
+  width: 720px;
+  max-width: 100%;
+  filter: drop-shadow(0 12px 25px rgba(0,0,0,0.5));
+}
+
+.glass-container h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin: 0 0 20px;
+  color: #052e16;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.5);
+}
+
+/* ===== TABS ===== */
+.form-tabs {
+  display: flex;
+  background: rgba(255,255,255,0.08);
+  border-radius: 16px;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+
+.form-tab {
+  flex: 1;
+  padding: 12px;
+  background: none;
+  border: none;
+  color: #052e16;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.form-tab.active {
+  background: rgba(34, 197, 94, 0.3);
+  color: #14532d;
+  font-weight: bold;
+}
+
+/* ===== FORMS ===== */
+.form-group {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.form-group i {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: #052e16;
+  opacity: 0.7;
+}
+
+.glass-input {
+  width: 100%;
+  padding: 14px 14px 14px 46px;
+  border-radius: 18px;
+  border: 1px solid rgba(5, 46, 22, 0.3);
+  background: rgba(255,255,255,0.6);
+  color: #052e16;
+  font-size: 0.95rem;
+  font-weight: 500;
+  outline: none;
+}
+
+.glass-input::placeholder {
+  color: rgba(5, 46, 22, 0.6);
+}
+
+.glass-input:focus {
+  background: rgba(255,255,255,0.8);
+  border-color: var(--eco-green);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+/* ===== BUTTON ===== */
+.glass-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: 20px;
+  border: none;
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  color: #052e16;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(34,197,94,0.5);
+}
+
+/* ===== MESSAGES ===== */
+.error, .success {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.error {
+  background: rgba(239,68,68,0.3);
+  color: #991b1b;
+  border: 1px solid rgba(239,68,68,0.5);
+}
+
+.success {
+  background: rgba(34,197,94,0.3);
+  color: #14532d;
+  border: 1px solid rgba(34,197,94,0.5);
+}
+
+/* ===== SPLASH SCREEN ===== */
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #052e16, #064e3b, #022c22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease;
+}
+
+.splash-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.splash-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at top left, #22c55e55, transparent 60%),
+    radial-gradient(circle at bottom right, #16a34a66, transparent 55%);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.splash-logo {
+  width: 400px;
+  height: 400px;
+  cursor: pointer;
+  animation: scaleIn 0.8s ease-out;
+  filter: drop-shadow(0 10px 30px rgba(34, 197, 94, 0.5));
+  z-index: 1;
+  transition: transform 0.8s ease, opacity 0.5s ease;
+}
+
+.splash-logo.swipe-left {
+  animation: swipeLeft 0.8s ease forwards !important;
+}
+
+.splash-text {
+  margin-top: 30px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #22c55e;
+  text-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+  animation: glow 2s ease-in-out infinite;
+  z-index: 1;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.splash-text.fade-out {
+  opacity: 0;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes swipeLeft {
+  0% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-150%) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(34, 197, 94, 0.5), 0 0 40px rgba(34, 197, 94, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(34, 197, 94, 0.8), 0 0 60px rgba(34, 197, 94, 0.5);
+  }
+}
+
+/* ===== ANIMATION ===== */
+.login-form,
+.register-form {
+  display: none;
+}
+
+.login-form.active,
+.register-form.active {
+  display: block;
+  animation: slideFade 0.5s ease;
+}
+
+@keyframes slideFade {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px) scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
+
+/* ===== CONTAINER ANIMATIONS ===== */
+.glass-container {
+  opacity: 0;
+  transform: translateX(100px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  order: 2;
+}
+
+.glass-container.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.logo-container {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.8s ease 0.5s, transform 0.8s ease 0.5s;
+}
+
+.logo-container.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ===== BUTTON ANIMATIONS ===== */
+.glass-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.glass-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.glass-btn:hover {
+  animation: buttonPulse 0.5s ease;
+}
+
+@keyframes buttonPulse {
+  0%, 100% {
+    transform: translateY(-1px) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.02);
+  }
+}
+
+/* ===== INPUT ANIMATIONS ===== */
+.glass-input {
+  transition: all 0.3s ease;
+}
+
+.glass-input:focus {
+  animation: inputFocus 0.3s ease;
+}
+
+@keyframes inputFocus {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ===== TAB ANIMATIONS ===== */
+.form-tab {
+  position: relative;
+  overflow: hidden;
+}
+
+.form-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: var(--eco-green);
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+
+.form-tab.active::after {
+  width: 80%;
+}
+
+.form-tab:hover {
+  transform: translateY(-2px);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #052e16;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 850px) {
+  .layout-wrapper {
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px 0;
+  }
+  
+  .logo-container img {
+    width: 400px;
+  }
+  
+  .splash-logo {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .glass-container {
+    padding: 22px;
+    border-radius: 22px;
+  }
+}
+
+@media (min-width: 768px) {
+  .glass-container {
+    max-width: 460px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Splash Screen -->
+<div class="splash-screen" id="splashScreen">
+  <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="splash-logo" id="splashLogo" onclick="handleSplashClick()">
+  <div class="splash-text" id="splashText" onclick="handleSplashClick()">Pechay Leaf System</div>
+</div>
+
+<div class="layout-wrapper">
+
+  <div class="logo-container">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+  </div>
+
+  <div class="glass-container">
+
+    <h1>Pechay Leaf System</h1>
+    <h2 style="text-align: center; color: #052e16; margin-bottom: 20px; font-size: 1.4rem; font-weight: 600;">Log In</h2>
+
+    <div class="form-tabs">
+    <button class="form-tab {{ 'active' if mode == 'login' else '' }}"
+      onclick="window.location.href='?mode=login'">
+      Login
+    </button>
+    <button class="form-tab {{ 'active' if mode == 'register' else '' }}"
+      onclick="window.location.href='?mode=register'">
+      Register
+    </button>
+  </div>
+
+  <!-- LOGIN -->
+  <form method="POST" class="login-form {{ 'active' if mode == 'login' else '' }}">
+    <div class="form-group">
+      <i class="fas fa-user"></i>
+      <input class="glass-input" name="username" placeholder="Username" required>
+    </div>
+
+    <div class="form-group">
+      <i class="fas fa-lock"></i>
+      <input type="password" class="glass-input" name="password" placeholder="Password" required>
+    </div>
+
+    <button class="glass-btn">Login</button>
+
+    {% if error and mode == 'login' %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+    {% if success %}
+      <div class="success">{{ success }}</div>
+    {% endif %}
+  </form>
+
+  <!-- REGISTER -->
+  <form method="POST" class="register-form {{ 'active' if mode == 'register' else '' }}">
+    <input type="hidden" name="action" value="register">
+
+    <div class="form-group">
+      <i class="fas fa-user"></i>
+      <input class="glass-input" name="username" placeholder="Username" required>
+    </div>
+
+    <div class="form-group">
+      <i class="fas fa-envelope"></i>
+      <input type="email" class="glass-input" name="email" placeholder="Email" required>
+    </div>
+
+    <div class="form-group">
+      <i class="fas fa-lock"></i>
+      <input type="password" class="glass-input" name="password" placeholder="Password" required>
+    </div>
+
+    <div class="form-group">
+      <i class="fas fa-lock"></i>
+      <input type="password" class="glass-input" name="confirm_password" placeholder="Confirm Password" required>
+    </div>
+
+    <button class="glass-btn">Create Account</button>
+
+    {% if error and mode == 'register' %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+  </form>
+
+  <div class="footer">
+    © 2026 Pechay Detection System
+  </div>
+
+</div>
+</div>
+
+<script>
+let splashShown = false;
+
+function handleSplashClick() {
+  const splashLogo = document.getElementById('splashLogo');
+  const splashText = document.getElementById('splashText');
+  const splashScreen = document.getElementById('splashScreen');
+  const container = document.querySelector('.glass-container');
+  const logoContainer = document.querySelector('.logo-container');
+  
+  // Prevent multiple clicks
+  if (splashLogo.classList.contains('swipe-left') || splashShown) {
+    return;
+  }
+  
+  splashShown = true;
+  
+  // Add swipe animation class (swipe to left)
+  splashLogo.classList.add('swipe-left');
+  splashText.classList.add('fade-out');
+  
+  // After logo swipes left, hide splash and show container from right
+  setTimeout(() => {
+    splashScreen.classList.add('hidden');
+    container.classList.add('show');
+    if (logoContainer) {
+      logoContainer.classList.add('show');
+    }
+  }, 800);
+}
+
+// Make splash screen clickable
+document.addEventListener('DOMContentLoaded', function() {
+  const splashLogo = document.getElementById('splashLogo');
+  const splashText = document.getElementById('splashText');
+  const splashScreen = document.getElementById('splashScreen');
+  const container = document.querySelector('.glass-container');
+  const logoContainer = document.querySelector('.logo-container');
+  
+  // Check if user is switching tabs (has mode parameter) - skip splash
+  const urlParams = new URLSearchParams(window.location.search);
+  const mode = urlParams.get('mode');
+  
+  if (mode === 'login' || mode === 'register') {
+    // User clicked login/register tab - skip splash screen
+    splashScreen.classList.add('hidden');
+    container.classList.add('show');
+    if (logoContainer) {
+      logoContainer.classList.add('show');
+    }
+    splashShown = true;
+    return;
+  }
+  
+  // Show splash screen on initial load
+  if (splashLogo) {
+    splashLogo.style.cursor = 'pointer';
+    splashLogo.addEventListener('click', handleSplashClick);
+  }
+  
+  if (splashText) {
+    splashText.style.cursor = 'pointer';
+    splashText.addEventListener('click', handleSplashClick);
+  }
+  
+  // Auto-hide splash after 5 seconds if not clicked
+  setTimeout(() => {
+    if (!splashShown) {
+      handleSplashClick();
+    }
+  }, 5000);
+});
+</script>
+
+</body>
+</html>

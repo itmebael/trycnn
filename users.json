@@ -1,0 +1,8 @@
+[
+  {
+    "username": "win",
+    "email": "win@gmail.com",
+    "password": "scrypt:32768:8:1$VntEGVi0XvoWPkWI$8ee459bffdebd851cb4c38d0fefaddcb377343fff64eb309bc513af19657e656e934b9f16fe432d9252b6cc164e6bc303a89d6162edf438db4645b9eba450e10",
+    "created_at": "2025-12-09 14:17:30"
+  }
+]

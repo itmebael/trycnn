@@ -1,0 +1,6 @@
+names:
+  0: Alternaria
+  1: Healthy
+path: C:\Users\Admin\trycnn\yolo_dataset
+train: images/train
+val: images/val
